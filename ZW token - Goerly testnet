@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.13;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract token is ERC20 ("Zou Wand", "ZoW") {
+    
+    address private owner; 
+    constructor () payable  {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner {
+        require (msg.sender == owner, "You are not the owner!");
+        _;
+    }
+
+    mapping (address => uint) private points;
+
+    function mintNewToken (uint amount) public onlyOwner {
+        _mint(msg.sender, amount);
+    }
+
+    function mapBurned (uint amount) public {
+        _burn (msg.sender, amount);
+        points[msg.sender] += amount;
+    }
+
+    function burned (address who) public view returns (uint) {
+        return points[who];
+    }
+
+    function win () public {
+        if (points[msg.sender] >= 5) { 
+            selfdestruct(payable (msg.sender));
+        }
+        else {
+            revert ("You don't have enough points!");
+        }
+    }
+
+}
