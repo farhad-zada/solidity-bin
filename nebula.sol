@@ -562,3 +562,4 @@ contract token is ERC20("Nebula for Nous", "N4N") {
         _mint(to, amount*(10**18));
     }
 }
+ana
