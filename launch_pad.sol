@@ -5,14 +5,12 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-
 // ADD get whitelist all;
 
 contract LaunchPad {
     using SafeERC20 for IERC20;
 
     IERC20 private token;
-    uint256 private contractBalance;
     address private owner;
     string private label;
     string private symbol;
@@ -69,23 +67,6 @@ contract LaunchPad {
         setDecimalAndSymbol(address(_token));
         admins[msg.sender] = true;
         owner = msg.sender;
-    }
-
-    receive() external payable {
-        contractBalance += msg.value;
-    }
-
-    function transferETH(address payable recipient, uint256 _amount)
-        public
-        payable
-        onlyOwner
-        returns (bool)
-    {
-        require(_amount != 0, "Zero amount.");
-        require(address(this).balance >= _amount, "Not enough balance.");
-        (bool success, ) = recipient.call{value: _amount}("");
-        contractBalance -= _amount;
-        return success;
     }
 
     function setProject(
@@ -271,9 +252,7 @@ contract LaunchPad {
     }
 }
 
-
-
-//      TEST 
+//      TEST
 
 /*
 1. Mint token for wallets
@@ -291,26 +270,4 @@ contract LaunchPad {
 8. transfer token
 9. withdraw token (soft cap not reached
 10. reset label
-
-
-
-
-contract Token20 is ERC20("HoWo", "HW") {
-    function mint(address account, uint256 amount) public {
-        _mint(account, amount * 10**decimals());
-    }
-
-    function decimals() public pure override returns (uint8) {
-        return 8;
-    }
-
-    function approve(address spender, uint256 amount)
-        public
-        override
-        returns (bool)
-    {
-        address owner = _msgSender();
-        _approve(owner, spender, amount * 10**decimals());
-        return true;
-    }
-}
+*/
